@@ -16,13 +16,13 @@ Alternatively one can just run python3 discordBot.py from the CL. Be sure that a
 ### Getting your bot to a server
 1. Head back to [the Discord developer API suite](https://discordapp.com/developers/docs/intro) and click on your bot.
 2. Click the 'Generate OAuth2 URL' button. Mark all permissions you would like the bot to have. There's no reason not to give the bot all permissions, so go ahead and do so by clicking 'Administrator'. This will also enable adding more functionality to the bot without having to regenerate an OAuth key with new permissions.
-3. Take the generator OAuth2 link and paste it into your browser. You may be asked to log in. Do so. You will then be prompted to add your bot to a server. You can only add bots to servers in which you have 'Manage Server' privileges.
+3. Take the generated OAuth2 link and paste it into your browser. You may be asked to log in. Do so. You will then be prompted to add your bot to a server. You can only add bots to servers in which you have 'Manage Server' privileges.
 4. Your bot should now be a part of your server. You can now run your bot and test your functionality. I recommend making your own temporary server to do this.
 
 
 ### The API calls
 1. The included API calls all assume a free account, meaning the APIs are probably rate limited. Be mindful of this when testing your bot.
-2. Imports for working with Reddit, Yelp, OpenWeatherMap and Discord are all included, but in my example, only Discord and OpenWeatherMap code is implemented. The rest if left to you.
+2. Imports for working with Reddit, Yelp, OpenWeatherMap and Discord are all included, but in my example, only Discord and OpenWeatherMap code is implemented. The rest is left to you.
 3. Documentation for each of the provided libraries are linked in the discordBot.py Python file. The code assumes you want API calls to return JSON as opposed to XML or some other parsable format.
 
 
