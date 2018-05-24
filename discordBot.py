@@ -7,7 +7,7 @@ from discord.ext import commands
 
 bot = commands.Bot(command_prefix='!')
 
-owm = pyowm.OWM('<your_openweathermap_api_key')
+owm = pyowm.OWM('<your_openweathermap_api_key>')
 
 greetings = ['Howdy ', 'Hey ', 'Hello ', 'What\'s up ', 'How\'s it going ']
 
