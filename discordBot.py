@@ -3,11 +3,24 @@ import praw                         # https://praw.readthedocs.io/en/latest/
 import pyowm                        # https://github.com/csparpa/pyowm
 import yelp                         # https://github.com/Yelp/yelp-python
 import random
+from yelpapi import YelpAPI
+from pprint import pprint
+import argparse
+from pprint import pprint
+
 from discord.ext import commands
+
+yelp_api = YelpAPI('api')
+
+# API constants, you shouldn't have to change these.
+API_HOST = 'https://api.yelp.com'
+SEARCH_PATH = '/v3/businesses/search'
+BUSINESS_PATH = '/v3/businesses/' # Business ID will come after slash.'
+
 
 bot = commands.Bot(command_prefix='!')
 
-owm = pyowm.OWM('<your_openweathermap_api_key>')
+owm = pyowm.OWM('api')
 
 greetings = ['Howdy ', 'Hey ', 'Hello ', 'What\'s up ', 'How\'s it going ']
 
@@ -52,6 +65,11 @@ async def greet(ctx):
     msg = greetings[random.randint(0, len(greetings) - 1)] + str(ctx.message.author) + '!'
     await bot.send_message(ctx.message.channel, msg)
 
+@bot.command(pass_context=True)
+async def food(ctx, yumyums, loc, sort):
+    response = yelp_api.search_query(term=str(yumyums), location=str(loc), sort_by=str(sort), limit=5)
+    await bot.send_message(ctx.message.channel, "Here is the top location in the " + loc + " area, sorted by " + sort + ".")
+    await bot.send_message(ctx.message.channel, response['businesses'][0]['name'])
 
 @bot.command(pass_context=True)
 async def purge(ctx, num):
@@ -66,4 +84,4 @@ async def purge(ctx, num):
     await bot.delete_messages(msgs)
 
 
-bot.run('<your_discord_bot_key>')
+bot.run('api')
