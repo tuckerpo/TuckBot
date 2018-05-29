@@ -1,26 +1,23 @@
 import discord, logging, json
-import praw                         # https://praw.readthedocs.io/en/latest/
-import pyowm                        # https://github.com/csparpa/pyowm
-import yelp                         # https://github.com/Yelp/yelp-python
+import praw  # https://praw.readthedocs.io/en/latest/
+import pyowm  # https://github.com/csparpa/pyowm
+import yelp  # https://github.com/Yelp/yelp-python
 import random
+import os
 from yelpapi import YelpAPI
-from pprint import pprint
-import argparse
-from pprint import pprint
 
 from discord.ext import commands
 
-yelp_api = YelpAPI('api')
+yelp_api = YelpAPI(os.environ.get('YELP_KEY'))
 
 # API constants, you shouldn't have to change these.
 API_HOST = 'https://api.yelp.com'
 SEARCH_PATH = '/v3/businesses/search'
-BUSINESS_PATH = '/v3/businesses/' # Business ID will come after slash.'
-
+BUSINESS_PATH = '/v3/businesses/'  # Business ID will come after slash.'
 
 bot = commands.Bot(command_prefix='!')
 
-owm = pyowm.OWM('api')
+owm = pyowm.OWM(os.environ.get('OWM_KEY'))
 
 greetings = ['Howdy ', 'Hey ', 'Hello ', 'What\'s up ', 'How\'s it going ']
 
@@ -35,12 +32,6 @@ async def on_ready():
     print("Connected.")
 
 
-@bot.listen()
-async def on_message(ctx, message):
-    # Will be called asynchronously whenever a message is sent to the channel in which the bot resides.
-    pass
-
-
 @bot.command(pass_context=True)
 async def weather(ctx, loc):
     # Calls upon the openweathermap API. Bot tells you the location the weather data is coming from, the temperature
@@ -52,7 +43,8 @@ async def weather(ctx, loc):
     data = obs.get_weather()
     datalist = []
     datalist.append("Fetching weather data from " + str(loc))
-    datalist.append("Current temperature: " + str(data.get_temperature()['temp'] * (9 / 5) - 459.67) + " °F")
+    datalist.append(
+        "Current temperature: " + str(data.get_temperature()['temp'] * (9 / 5) - 459.67).split(".")[0] + " °F")
     datalist.append("Current humidity: " + str(data.get_humidity()) + " % ")
     datalist.append(str(data.get_detailed_status()))
     for x in range(len(datalist)):
@@ -65,11 +57,14 @@ async def greet(ctx):
     msg = greetings[random.randint(0, len(greetings) - 1)] + str(ctx.message.author) + '!'
     await bot.send_message(ctx.message.channel, msg)
 
+
 @bot.command(pass_context=True)
 async def food(ctx, yumyums, loc, sort):
     response = yelp_api.search_query(term=str(yumyums), location=str(loc), sort_by=str(sort), limit=5)
-    await bot.send_message(ctx.message.channel, "Here is the top location in the " + loc + " area, sorted by " + sort + ".")
+    await bot.send_message(ctx.message.channel,
+                           "Here is the top location in the " + loc + " area, sorted by " + sort + ".")
     await bot.send_message(ctx.message.channel, response['businesses'][0]['name'])
+
 
 @bot.command(pass_context=True)
 async def purge(ctx, num):
@@ -84,4 +79,4 @@ async def purge(ctx, num):
     await bot.delete_messages(msgs)
 
 
-bot.run('api')
+bot.run(os.environ.get('DISCORD_KEY'))
